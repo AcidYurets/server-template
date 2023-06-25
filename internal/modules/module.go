@@ -8,6 +8,7 @@ import (
 	"server-template/internal/modules/db"
 	"server-template/internal/modules/domain"
 	"server-template/internal/modules/echo"
+	"server-template/internal/modules/http"
 	"server-template/internal/modules/logger"
 )
 
@@ -17,6 +18,7 @@ var (
 		config.Module,
 		db.Module,
 		echo.Module,
+		http.Module,
 
 		domain.Module,
 
@@ -30,6 +32,7 @@ var (
 		config.Invokables,
 		db.Invokables,
 		echo.Invokables,
+		http.Invokables,
 
 		domain.Invokables,
 	)

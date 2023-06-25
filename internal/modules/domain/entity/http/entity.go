@@ -4,7 +4,7 @@ import (
 	"context"
 	"server-template/internal/modules/domain/entity/dto"
 	"server-template/internal/modules/domain/entity/service"
-	"server-template/internal/pkg/routers"
+	"server-template/internal/modules/http"
 )
 
 type EntityController struct {
@@ -17,7 +17,7 @@ func NewEntityController(service *service.EntityService) *EntityController {
 	}
 }
 
-func InvokeEntityController(controller *EntityController, router routers.Router) {
+func InvokeEntityController(controller *EntityController, router http.ApiRouter) {
 	router.Post("/entity", controller.Create)
 }
 
