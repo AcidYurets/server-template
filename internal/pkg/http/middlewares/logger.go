@@ -1,10 +1,12 @@
 package middlewares
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"io"
+	"net/http"
 	"server-template/internal/modules/logger"
 	"time"
 
@@ -27,6 +29,11 @@ func UseRequestLogger(logger *zap.Logger) echo.MiddlewareFunc {
 		return func(c echo.Context) error {
 			var start, stop time.Time
 
+			reqBody, dumpErr := dumpRequestBody(c.Request())
+			if dumpErr != nil {
+				return fmt.Errorf("ошибка при логировании: %w", dumpErr)
+			}
+
 			start = time.Now()
 			err := next(c)
 			stop = time.Now()
@@ -48,17 +55,11 @@ func UseRequestLogger(logger *zap.Logger) echo.MiddlewareFunc {
 
 			fields := []zap.Field{
 				zap.String("ip", c.RealIP()),
+				zap.String("latency", stop.Sub(start).String()),
 				zap.String("path", c.Path()),
 				zap.String("method", c.Request().Method),
 				zap.Int("status", c.Response().Status),
-				zap.String("latency", stop.Sub(start).String()),
-			}
-
-			body, readErr := io.ReadAll(c.Request().Body)
-			if readErr != nil {
-				fields = append(fields, zap.NamedError("read_body_error", fmt.Errorf("не удалось прочитать тело запроса: %w", err)))
-			} else {
-				fields = append(fields, zap.ByteString("body", body))
+				zap.ByteString("body", reqBody),
 			}
 
 			if err != nil {
@@ -86,4 +87,22 @@ func UseRequestLogger(logger *zap.Logger) echo.MiddlewareFunc {
 			return nil
 		}
 	}
+}
+
+func dumpRequestBody(req *http.Request) ([]byte, error) {
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return nil, fmt.Errorf("не удалось прочитать тело запроса: %w", err)
+	}
+	if len(body) == 0 {
+		return nil, nil
+	}
+
+	err = req.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("не удалось закрыть тело запроса: %w", err)
+	}
+	req.Body = io.NopCloser(bytes.NewReader(body))
+
+	return body, nil
 }

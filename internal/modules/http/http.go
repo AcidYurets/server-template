@@ -18,15 +18,8 @@ type PublicRouter routers.Router
 
 // NewHTTP создает http все необходимые роутеры
 func NewHTTP(server *echo.Echo) (Routers, error) {
-	publicRouter := &routers.EchoRouter{
-		Router: server,
-	}
-	apiRouter := &routers.EchoRouter{
-		Router: server.Group("/api"),
-	}
-
 	return Routers{
-		Api:    ApiRouter(apiRouter),
-		Public: PublicRouter(publicRouter),
+		Public: publicRouter(server),
+		Api:    apiRouter(server.Group("/api")),
 	}, nil
 }

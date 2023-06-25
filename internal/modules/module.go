@@ -31,8 +31,6 @@ var (
 		logger.Invokables,
 		config.Invokables,
 		db.Invokables,
-		echo.Invokables,
-		http.Invokables,
 
 		domain.Invokables,
 	)

@@ -2,6 +2,7 @@ package error_handler
 
 import (
 	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"server-template/internal/pkg/http/error_handler/http_errors"
@@ -17,8 +18,8 @@ func ErrorHandler(err error, c echo.Context) {
 	case errors.As(err, &echoError):
 		apiError = &http_errors.ErrorResponse{
 			Code:    echoError.Code,
-			Message: "внутренняя ошибка сервера",
-			Details: echoError.Error(),
+			Message: "Внутренняя ошибка сервера",
+			Details: fmt.Sprintf("%v", echoError.Message),
 		}
 	case errors.As(err, &apiError):
 		if apiError.Code == 0 {

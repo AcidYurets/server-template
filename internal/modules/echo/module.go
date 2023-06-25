@@ -4,7 +4,6 @@ import (
 	"go.uber.org/fx"
 )
 
-var (
-	Module     = fx.Provide(NewEcho)
-	Invokables = fx.Invoke(InvokeEcho)
-)
+var Module = fx.Module("echo",
+	fx.Provide(NewEcho),
+	fx.Invoke(InvokeEcho))

@@ -19,7 +19,7 @@ func NewEntityRepo(client *ent.Client) *EntityRepo {
 // Create создание записи в БД
 func (r *EntityRepo) Create(ctx context.Context, entity *dto.Entity) (*dto.Entity, error) {
 	newEntity, err := r.client.Entity.Create().
-		SetField(entity.Filed).
+		SetField(entity.Field).
 		Save(ctx)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func ToEntityDTO(model *ent.Entity) *dto.Entity {
 
 	return &dto.Entity{
 		Id:    model.ID,
-		Filed: model.Field,
+		Field: model.Field,
 	}
 }
 
