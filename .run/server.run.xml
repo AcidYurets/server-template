@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="server" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="server-template" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="AUTO_MIGRATE" value="true" />
+      <env name="DB_HOST" value="localhost" />
+      <env name="DB_NAME" value="server_db" />
+      <env name="DB_PASS" value="passw0rd" />
+      <env name="DB_PORT" value="5432" />
+      <env name="DB_USER" value="postgres" />
+      <env name="HTTP_SERVER_HOST" value="[::]" />
+      <env name="HTTP_SERVER_PORT" value="8080" />
+      <env name="LOG_LEVEL" value="debug" />
+      <env name="TRACE_SQL_COMMANDS" value="true" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="server-template/cmd/server" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/server/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
