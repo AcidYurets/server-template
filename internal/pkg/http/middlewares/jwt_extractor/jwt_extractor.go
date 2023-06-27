@@ -2,9 +2,9 @@ package jwt_extractor
 
 import (
 	"fmt"
-	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"server-template/internal/models/err_const"
 )
 
 // New ...
@@ -19,11 +19,6 @@ func New(config ...Config) echo.MiddlewareFunc {
 	// Return middleware handler
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			// Filter request to skip middleware
-			if cfg.Filter != nil && cfg.Filter(c) {
-				return next(c)
-			}
-
 			var lastExtractorErr error
 
 			for _, extractor := range extractors {
@@ -48,7 +43,7 @@ func New(config ...Config) echo.MiddlewareFunc {
 
 			var err error
 			if lastExtractorErr != nil {
-				err = &echojwt.TokenExtractionError{Err: lastExtractorErr}
+				err = err_const.ErrMissingToken
 			}
 
 			tmpErr := cfg.ErrorHandler(c, err)

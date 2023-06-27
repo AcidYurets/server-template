@@ -4,7 +4,6 @@ import (
 	"go.uber.org/fx"
 )
 
-var (
-	Module     = fx.Provide(NewEntityController)
-	Invokables = fx.Invoke(InvokeEntityController)
-)
+var Module = fx.Module("http",
+	fx.Provide(NewEntityController),
+	fx.Invoke(InvokeEntityController))

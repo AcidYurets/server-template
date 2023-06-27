@@ -6,7 +6,7 @@ import (
 )
 
 type IEntityRepo interface {
-	Create(ctx context.Context, entity *dto.Entity) (*dto.Entity, error)
+	Create(ctx context.Context, entity *dto.EntityCreate) (*dto.Entity, error)
 }
 
 type EntityService struct {
@@ -20,6 +20,6 @@ func NewEntityService(repo IEntityRepo) *EntityService {
 }
 
 // Create создание записи в БД
-func (r *EntityService) Create(ctx context.Context, entity *dto.Entity) (*dto.Entity, error) {
+func (r *EntityService) Create(ctx context.Context, entity *dto.EntityCreate) (*dto.Entity, error) {
 	return r.repo.Create(ctx, entity)
 }

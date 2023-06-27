@@ -8,6 +8,7 @@ import (
 	"server-template/internal/modules/db"
 	"server-template/internal/modules/domain"
 	"server-template/internal/modules/echo"
+	"server-template/internal/modules/graphql"
 	"server-template/internal/modules/http"
 	"server-template/internal/modules/logger"
 )
@@ -19,19 +20,12 @@ var (
 		db.Module,
 		echo.Module,
 		http.Module,
+		graphql.Module,
 
 		domain.Module,
 
 		fx.WithLogger(func(log *zap.Logger) fxevent.Logger {
 			return &fxevent.ZapLogger{Logger: log}
 		}),
-	)
-
-	AppInvokables = fx.Options(
-		logger.Invokables,
-		config.Invokables,
-		db.Invokables,
-
-		domain.Invokables,
 	)
 )

@@ -17,7 +17,7 @@ func UseContextLogger(lg *zap.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			ctx := logger.SetToCtx(c.Request().Context(), lg)
-			c.Request().WithContext(ctx)
+			c.SetRequest(c.Request().WithContext(ctx))
 
 			return next(c)
 		}

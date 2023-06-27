@@ -21,11 +21,11 @@ func InvokeEntityController(controller *EntityController, router http.ApiRouter)
 	router.Post("/entity", controller.Create)
 }
 
-func (controller *EntityController) Create(ctx context.Context, entity *dto.Entity) (*dto.Entity, error) {
-	entity, err := controller.service.Create(ctx, entity)
+func (controller *EntityController) Create(ctx context.Context, entity *dto.EntityCreate) (*dto.Entity, error) {
+	createdEntity, err := controller.service.Create(ctx, entity)
 	if err != nil {
 		return nil, err
 	}
 
-	return entity, nil
+	return createdEntity, nil
 }

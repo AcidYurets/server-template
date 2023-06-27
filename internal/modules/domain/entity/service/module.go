@@ -4,7 +4,5 @@ import (
 	"go.uber.org/fx"
 )
 
-var (
-	Module     = fx.Provide(NewEntityService)
-	Invokables = fx.Invoke()
-)
+var Module = fx.Module("service",
+	fx.Provide(NewEntityService))

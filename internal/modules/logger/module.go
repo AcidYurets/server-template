@@ -4,7 +4,6 @@ import (
 	"go.uber.org/fx"
 )
 
-var (
-	Module     = fx.Provide(NewLogger)
-	Invokables = fx.Invoke(InvokeLogger)
-)
+var Module = fx.Module("logger",
+	fx.Provide(NewLogger),
+	fx.Invoke(InvokeLogger))

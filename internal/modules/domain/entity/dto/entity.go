@@ -7,3 +7,11 @@ type Entity struct {
 }
 
 type Entities []*Entity
+
+type EntityCreate struct {
+	Field string // Поле сущности
+}
+
+type EntityUpdate struct {
+	Field string // Поле сущности
+}

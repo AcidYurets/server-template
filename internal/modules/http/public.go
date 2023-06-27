@@ -4,10 +4,8 @@ import (
 	"server-template/internal/pkg/routers"
 )
 
-func publicRouter(echoRouter routers.IEchoRouter) PublicRouter {
-	// Тут middleware для /
+func publicRouter(router routers.Router) PublicRouter {
+	router.Static("/docs", "./docs")
 
-	return &routers.EchoRouter{
-		Router: echoRouter,
-	}
+	return router
 }

@@ -8,6 +8,5 @@ import (
 func main() {
 	fx.New(
 		modules.AppModule,
-		modules.AppInvokables,
 	).Run()
 }

@@ -1,0 +1,22 @@
+extend type Query {
+    "Получить сущности по идентификатору"
+    EntityGet(id: ID!): Entity!
+    "Получить все сущности"
+    EntityList: [Entity!]!
+    "Создать сущность"
+    EntityCreate(entity: EntityCreate!): Entity!
+    "Обновить сущность"
+    EntityUpdate(id: ID!, entity: EntityUpdate!): Entity!
+    "Удалить сущность"
+    EntityDelete(id: ID!): ID!
+}
+
+input EntityCreate @goModel(model: "server-template/internal/modules/domain/entity/dto.EntityCreate") {
+    "Поле"
+    Field: String!
+}
+
+input EntityUpdate @goModel(model: "server-template/internal/modules/domain/entity/dto.EntityUpdate") {
+    "Поле"
+    Field: String!
+}

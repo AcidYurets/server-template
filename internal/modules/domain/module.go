@@ -6,10 +6,7 @@ import (
 )
 
 var (
-	Module = fx.Options(
+	Module = fx.Module("domain",
 		entity.Module,
-	)
-	Invokables = fx.Options(
-		entity.Invokables,
 	)
 )

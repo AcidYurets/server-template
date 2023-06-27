@@ -17,7 +17,7 @@ func NewEntityRepo(client *ent.Client) *EntityRepo {
 }
 
 // Create создание записи в БД
-func (r *EntityRepo) Create(ctx context.Context, entity *dto.Entity) (*dto.Entity, error) {
+func (r *EntityRepo) Create(ctx context.Context, entity *dto.EntityCreate) (*dto.Entity, error) {
 	newEntity, err := r.client.Entity.Create().
 		SetField(entity.Field).
 		Save(ctx)

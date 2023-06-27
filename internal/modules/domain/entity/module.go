@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	Module = fx.Options(
+	Module = fx.Module("entity",
 		http.Module,
 		service.Module,
 		repo.Module,
@@ -19,11 +19,5 @@ var (
 				fx.As(new(service.IEntityRepo)),
 			),
 		),
-	)
-
-	Invokables = fx.Options(
-		http.Invokables,
-		service.Invokables,
-		repo.Invokables,
 	)
 )

@@ -1,5 +1,7 @@
 package err_const
 
+import "fmt"
+
 // Константные ошибки
 
 // Const тип используемый для константных ошибок, позволяет избегать возможных мутаций значений ошибок.
@@ -20,6 +22,8 @@ const (
 	ErrUuidMissing  = Const("не указан Uuid объекта")
 	ErrIdValidate   = Const("неверно указан Id объекта")
 	ErrUuidValidate = Const("неверно указан Uuid объекта")
+
+	ErrMissingToken = Const("не указан токен авторизации")
 )
 
 type PanicError struct {
@@ -38,7 +42,7 @@ func FromPanic(panicInstance interface{}) *PanicError {
 		panicMsg = msg.Error()
 
 	default:
-		panicMsg = "внутрення ошибка системы"
+		panicMsg = fmt.Sprint(panicInstance)
 	}
 
 	return &PanicError{

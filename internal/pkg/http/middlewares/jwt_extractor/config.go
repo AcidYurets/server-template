@@ -3,23 +3,16 @@ package jwt_extractor
 import (
 	"errors"
 	"github.com/labstack/echo/v4"
-	"net/http"
+	"server-template/internal/models/err_const"
+	"server-template/internal/pkg/constants"
 )
 
 const (
-	defaultTokenLookup = "header:Authorization:Bearer "
-)
-
-var (
-	ErrMissingJWT = errors.New("токен отсутствует")
+	defaultTokenLookup = "header:" + constants.HeaderAuthorization + ":Bearer "
 )
 
 // Config defines the config for JWT middleware
 type Config struct {
-	// Filter defines a function to skip middleware.
-	// Optional. Default: nil
-	Filter func(c echo.Context) bool
-
 	// SuccessHandler defines a function which is executed for a valid token.
 	// Optional. Default: nil
 	SuccessHandler func(c echo.Context) error
@@ -47,10 +40,6 @@ type Config struct {
 	// - "header:Authorization:Bearer ,cookie:myowncookie"
 	TokenLookup string
 
-	// AuthScheme to be used in the Authorization header.
-	// Optional. Default: "Bearer".
-	AuthScheme string
-
 	// Context key to store user information from the token into context.
 	// Optional. Default: "token".
 	ContextKey string
@@ -68,20 +57,19 @@ func makeCfg(config []Config) (cfg Config) {
 	}
 	if cfg.ErrorHandler == nil {
 		cfg.ErrorHandler = func(c echo.Context, err error) error {
-			// TODO Подумать над обработкой
-			if err.Error() == "Missing or malformed JWT" {
-				c.Response().WriteHeader(http.StatusBadRequest)
-				return ErrMissingJWT
+			if err != nil {
+				if errors.Is(err, err_const.ErrMissingToken) {
+					return nil
+				}
+
+				return err
 			}
-			return c.String(http.StatusUnauthorized, "Invalid or expired JWT")
+			return nil
 		}
 	}
 
 	if cfg.TokenLookup == "" {
 		cfg.TokenLookup = defaultTokenLookup
-	}
-	if cfg.AuthScheme == "" {
-		cfg.AuthScheme = "Bearer"
 	}
 	if cfg.ContextKey == "" {
 		cfg.ContextKey = "token"

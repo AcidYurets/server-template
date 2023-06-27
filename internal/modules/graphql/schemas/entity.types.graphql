@@ -1,0 +1,8 @@
+"Сущность"
+type Entity @goModel(model: "server-template/internal/modules/domain/entity/dto.Entity") {
+    "Идентификатор"
+    Id: ID!
+    "Поле"
+    Field: String!
+}
+

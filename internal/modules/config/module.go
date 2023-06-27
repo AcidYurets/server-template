@@ -4,7 +4,5 @@ import (
 	"go.uber.org/fx"
 )
 
-var (
-	Module     = fx.Provide(NewConfig)
-	Invokables = fx.Invoke()
-)
+var Module = fx.Module("config",
+	fx.Provide(NewConfig))

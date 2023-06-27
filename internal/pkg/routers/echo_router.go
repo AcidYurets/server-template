@@ -1,10 +1,12 @@
 package routers
 
 import (
+	"context"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"reflect"
+	"runtime"
 )
 
 // IEchoRouter интерфейс, которому удовлетворяют echo.Echo и echo.Group
@@ -15,7 +17,9 @@ type IEchoRouter interface {
 	POST(path string, h echo.HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route
 	PUT(path string, h echo.HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route
 	Any(path string, handler echo.HandlerFunc, middleware ...echo.MiddlewareFunc) []*echo.Route
+
 	Group(prefix string, middleware ...echo.MiddlewareFunc) (sg *echo.Group)
+	Use(middleware ...echo.MiddlewareFunc)
 }
 
 type EchoRouter struct {
@@ -31,6 +35,8 @@ func (r *EchoRouter) wrap(handler interface{}, opts ...RouteOption) echo.Handler
 
 	switch h := handler.(type) {
 	case func(c echo.Context) error:
+		internalHandler = h
+	case echo.HandlerFunc:
 		internalHandler = h
 	case func(w http.ResponseWriter, r *http.Request):
 		internalHandler = echo.WrapHandler(http.HandlerFunc(h))
@@ -50,7 +56,10 @@ func (r *EchoRouter) wrap(handler interface{}, opts ...RouteOption) echo.Handler
 func echoRequest(handler interface{}) echo.HandlerFunc {
 	fVal := reflect.ValueOf(handler)
 	fType := fVal.Type()
+	fName := runtime.FuncForPC(fVal.Pointer()).Name()
+
 	paramsType := reflect.TypeOf(Params{})
+	contextType := reflect.TypeOf((*context.Context)(nil)).Elem()
 
 	// 1-3 параметра входящие
 	//  1 - ctx - контекст
@@ -64,7 +73,10 @@ func echoRequest(handler interface{}) echo.HandlerFunc {
 	if fType.NumIn() == 0 ||
 		fType.NumIn() > 3 ||
 		fType.NumOut() != 2 {
-		panic(fmt.Errorf("ошибка в обработчике %s: некорректное число параметров", fVal.String()))
+		panic(fmt.Errorf("ошибка в обработчике %s %s: некорректное число параметров", fName, fVal.String()))
+	}
+	if fType.In(0) != contextType {
+		panic(fmt.Errorf("ошибка в обработчике %s %s: первый аргумент должен быть context.Context", fName, fVal.String()))
 	}
 
 	hasParams, hasReq := false, false
@@ -168,6 +180,19 @@ func (r *EchoRouter) Group(prefix string, middlewares ...interface{}) Router {
 	}
 }
 
+func (r *EchoRouter) Use(middlewares ...interface{}) {
+	echoMiddlewares := make([]echo.MiddlewareFunc, 0, len(middlewares))
+	for _, middleware := range middlewares {
+		echoMiddleware, ok := middleware.(echo.MiddlewareFunc)
+		if !ok {
+			panic("указанные в Group middlewares не удовлетворяют типу echo.MiddlewareFunc")
+		}
+		echoMiddlewares = append(echoMiddlewares, echoMiddleware)
+	}
+
+	r.Router.Use(echoMiddlewares...)
+}
+
 func (r *EchoRouter) Post(path string, handler interface{}, opts ...RouteOption) Router {
 	r.Router.POST(path, r.wrap(handler, opts...))
 	return r
@@ -190,5 +215,23 @@ func (r *EchoRouter) Patch(path string, handler interface{}, opts ...RouteOption
 
 func (r *EchoRouter) Delete(path string, handler interface{}, opts ...RouteOption) Router {
 	r.Router.DELETE(path, r.wrap(handler, opts...))
+	return r
+}
+
+func (r *EchoRouter) Static(pathPrefix string, fsRoot string) Router {
+	// Тут нужен type switch, т.к. echo.Echo и echo.Group имеют разные методы Static
+	switch routerWithStatic := r.Router.(type) {
+	case interface {
+		Static(pathPrefix string, fsRoot string)
+	}:
+		routerWithStatic.Static(pathPrefix, fsRoot)
+	case interface {
+		Static(pathPrefix string, fsRoot string) *echo.Route
+	}:
+		routerWithStatic.Static(pathPrefix, fsRoot)
+	default:
+		panic("указан неверный тип роутера")
+	}
+
 	return r
 }

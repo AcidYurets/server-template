@@ -4,7 +4,6 @@ import (
 	"go.uber.org/fx"
 )
 
-var (
-	Module     = fx.Provide(NewDBClient)
-	Invokables = fx.Invoke(InvokeDBClient)
-)
+var Module = fx.Module("db",
+	fx.Provide(NewDBClient),
+	fx.Invoke(InvokeDBClient))
