@@ -1,7 +1,0 @@
-### Создание
-POST http://{{server_host}}/api/entity
-Content-Type: application/json
-
-{
-  "Field": "value"
-}

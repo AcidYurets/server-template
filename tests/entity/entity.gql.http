@@ -1,0 +1,67 @@
+### Get By Id
+GRAPHQL http://{{server_host}}/api/graphql
+
+query GetById($id: ID!) {
+    EntityGet(id: $id) {
+        Id
+        Field
+    }
+}
+
+{
+  "id": 15
+}
+
+### List
+GRAPHQL http://{{server_host}}/api/graphql
+
+query List {
+    EntityList {
+        Id
+        Field
+    }
+}
+
+### Create
+GRAPHQL http://{{server_host}}/api/graphql
+
+query Create($entity: EntityCreate!) {
+    EntityCreate(entity: $entity) {
+        Id
+        Field
+    }
+}
+
+{
+  "entity" : {
+    "Field": "gql"
+  }
+}
+
+### Update
+GRAPHQL http://{{server_host}}/api/graphql
+
+query Update($id: ID!, $entity: EntityUpdate!) {
+    EntityUpdate(entity: $entity, id: $id) {
+        Id
+        Field
+    }
+}
+
+{
+  "id": 15,
+  "entity" : {
+    "Field": "new gql"
+  }
+}
+
+### Delete
+GRAPHQL http://{{server_host}}/api/graphql
+
+query Delete($id: ID!) {
+    EntityDelete(id: $id)
+}
+
+{
+  "id": 2
+}

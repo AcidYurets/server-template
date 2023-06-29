@@ -8,7 +8,7 @@ extend type Query {
     "Обновить сущность"
     EntityUpdate(id: ID!, entity: EntityUpdate!): Entity!
     "Удалить сущность"
-    EntityDelete(id: ID!): ID!
+    EntityDelete(id: ID!): String!
 }
 
 input EntityCreate @goModel(model: "server-template/internal/modules/domain/entity/dto.EntityCreate") {

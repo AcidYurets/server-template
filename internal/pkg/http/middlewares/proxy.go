@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
-	"server-template/internal/pkg/constants"
+	"server-template/internal/pkg/http/constants"
 	"server-template/internal/pkg/http/error_handler/http_errors"
 	"server-template/internal/utils"
 )

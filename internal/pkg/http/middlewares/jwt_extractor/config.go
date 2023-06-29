@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/labstack/echo/v4"
 	"server-template/internal/models/err_const"
-	"server-template/internal/pkg/constants"
+	"server-template/internal/pkg/http/constants"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 
 type Params map[string]string
 
-func (params Params) GetId() (uint, error) {
+func (params Params) GetId() (int, error) {
 	id, ok := params["id"]
 	if !ok {
 		return 0, err_const.ErrIdMissing
@@ -18,7 +18,7 @@ func (params Params) GetId() (uint, error) {
 		return 0, err_const.ErrIdValidate
 	}
 
-	return uint(idUint), nil
+	return idUint, nil
 }
 
 func (params Params) GetUuid() (string, error) {

@@ -1,0 +1,24 @@
+### Get By Id
+GET http://{{server_host}}/api/entity/15
+
+### List
+GET http://{{server_host}}/api/entity
+
+### Create
+POST http://{{server_host}}/api/entity
+Content-Type: application/json
+
+{
+  "Field": "rest api"
+}
+
+### Update
+PUT http://{{server_host}}/api/entity/10
+Content-Type: application/json
+
+{
+  "Field": "new rest api"
+}
+
+### Delete
+DELETE http://{{server_host}}/api/entity/11
