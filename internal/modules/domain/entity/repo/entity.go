@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"server-template/internal/modules/db/ent"
+	"server-template/internal/modules/db/utils"
 	"server-template/internal/modules/domain/entity/dto"
 )
 
@@ -20,7 +21,7 @@ func NewEntityRepo(client *ent.Client) *EntityRepo {
 func (r *EntityRepo) GetById(ctx context.Context, id int) (*dto.Entity, error) {
 	entity, err := r.client.Entity.Get(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, utils.WrapError(err)
 	}
 
 	return ToEntityDTO(entity), nil
@@ -30,7 +31,7 @@ func (r *EntityRepo) GetById(ctx context.Context, id int) (*dto.Entity, error) {
 func (r *EntityRepo) List(ctx context.Context) ([]*dto.Entity, error) {
 	entities, err := r.client.Entity.Query().All(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.WrapError(err)
 	}
 
 	return ToEntityDTOs(entities), nil
@@ -42,7 +43,7 @@ func (r *EntityRepo) Create(ctx context.Context, entity *dto.EntityCreate) (*dto
 		SetField(entity.Field).
 		Save(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.WrapError(err)
 	}
 
 	return ToEntityDTO(newEntity), nil
@@ -54,7 +55,7 @@ func (r *EntityRepo) Update(ctx context.Context, id int, entity *dto.EntityUpdat
 		SetField(entity.Field).
 		Save(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.WrapError(err)
 	}
 
 	return ToEntityDTO(updEntity), nil
@@ -64,7 +65,7 @@ func (r *EntityRepo) Update(ctx context.Context, id int, entity *dto.EntityUpdat
 func (r *EntityRepo) Delete(ctx context.Context, id int) error {
 	err := r.client.Entity.DeleteOneID(id).Exec(ctx)
 	if err != nil {
-		return err
+		return utils.WrapError(err)
 	}
 
 	return nil

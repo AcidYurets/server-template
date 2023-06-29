@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"server-template/internal/models/err_const"
-	"strings"
 )
 
 func statusCodeAndErrorMessage(err error) (int, string, string) {
@@ -20,8 +19,6 @@ func statusCodeAndErrorMessage(err error) (int, string, string) {
 		return http.StatusBadRequest, err_const.ErrMissingUser.Error(), err.Error()
 	case errors.Is(err, err_const.ErrMissingToken):
 		return http.StatusBadRequest, err_const.ErrMissingToken.Error(), err.Error()
-	case strings.HasSuffix(err.Error(), "record not found"):
-		return http.StatusNotFound, "запись не найдена", err.Error()
 	default:
 		return http.StatusInternalServerError, fmt.Errorf("ошибка обработки запроса: %w", err).Error(), err.Error()
 	}
