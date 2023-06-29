@@ -20,6 +20,3 @@ type Router interface {
 	Delete(path string, f interface{}, opts ...RouteOption) Router
 	Static(pathPrefix string, fsRoot string) Router
 }
-
-type PermissionIdent struct{}
-type PermissionReIdent struct{}
