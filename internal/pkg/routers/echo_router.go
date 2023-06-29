@@ -28,15 +28,23 @@ type EchoRouter struct {
 	Router         IEchoRouter
 }
 
-/* Примеры допустимых обработчиков */
+// Типы для демонстрации примеров обработчиков
 type (
 	inputType  struct{}
 	outputType struct{}
+)
 
+// Примеры допустимых обработчиков
+type (
 	_ func(ctx context.Context) (*outputType, error)
 	_ func(ctx context.Context, req *inputType) (*outputType, error)
 	_ func(ctx context.Context, params Params) (*outputType, error)
 	_ func(ctx context.Context, params Params, req *inputType) (*outputType, error)
+
+	_ func(ctx context.Context) error
+	_ func(ctx context.Context, req *inputType) error
+	_ func(ctx context.Context, params Params) error
+	_ func(ctx context.Context, params Params, req *inputType) error
 )
 
 func (r *EchoRouter) wrap(handler interface{}, opts ...RouteOption) echo.HandlerFunc {
